@@ -5,10 +5,9 @@ based on https://gist.github.com/vbe0201/ade9b80f2d3b64643d854938d40a0a2d
 import youtube_dl
 import json
 from discord.ext import commands
+from music_commands import MusicCogs
 
 # Silence useless bug reports messages
-from music_commands import Music
-
 youtube_dl.utils.bug_reports_message = lambda: ''
 TOKEN = ''
 with open('config.json') as json_data_file:
@@ -17,7 +16,7 @@ with open('config.json') as json_data_file:
         TOKEN = config_token
 
 bot = commands.Bot(command_prefix='~', description='Yet another music bot.')
-bot.add_cog(Music(bot))
+bot.add_cog(MusicCogs(bot))
 
 
 @bot.event
