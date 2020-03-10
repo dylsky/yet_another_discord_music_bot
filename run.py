@@ -5,7 +5,7 @@ based on https://gist.github.com/vbe0201/ade9b80f2d3b64643d854938d40a0a2d
 import youtube_dl
 import json
 from discord.ext import commands
-from music_commands import MusicCogs
+from CogsColletion.music_cogs import MusicCogs
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''

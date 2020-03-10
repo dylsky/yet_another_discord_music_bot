@@ -4,11 +4,11 @@ import logging
 from async_timeout import timeout
 from discord.ext import commands
 
-from exceptions import VoiceError
-from song_queue import SongQueue
+from Exceptions.exceptions import VoiceError
+from AudioHelpers.song_queue import SongQueue
 
 
-class VoiceState:
+class VoiceStateManager:
     def __init__(self, bot: commands.Bot, ctx: commands.Context):
         self.bot = bot
         self._ctx = ctx

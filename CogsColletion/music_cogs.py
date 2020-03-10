@@ -3,10 +3,12 @@ import math
 import discord
 from discord.ext import commands
 
-from exceptions import VoiceError
-from song import Song
-from voice_state import VoiceState
-from ytdl_source import YTDLSource, YTDLError
+from AudioHelpers.AudioSources.audio_source_factory import AudioSourceFactory
+from AudioHelpers.AudioSources.audio_source_identifier import AudioSourceIdentifier
+from Exceptions.exceptions import VoiceError, PlayerError
+from AudioHelpers.song import Song
+from Managers.voice_state_manager import VoiceStateManager
+from AudioHelpers.AudioSources.ytdl_source import YTDLSource, YTDLError
 
 
 class MusicCogs(commands.Cog):
@@ -17,7 +19,7 @@ class MusicCogs(commands.Cog):
     def get_voice_state(self, ctx: commands.Context):
         state = self.voice_states.get(ctx.guild.id)
         if not state:
-            state = VoiceState(self.bot, ctx)
+            state = VoiceStateManager(self.bot, ctx)
             self.voice_states[ctx.guild.id] = state
 
         return state
@@ -222,8 +224,14 @@ class MusicCogs(commands.Cog):
 
         async with ctx.typing():
             try:
-                source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
-            except YTDLError as e:
+                audio_source_type = AudioSourceIdentifier.identify_source(search)
+                audio_source = AudioSourceFactory.provide_source(audio_source_type)
+                if audio_source is not None:
+                    # TODO ?
+                    source = await audio_source.create_source(ctx, search, loop=self.bot.loop)
+                else:
+                    await ctx.send('{} is not supported source.'.format(str(search)))
+            except PlayerError as e:
                 await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
             else:
                 song = Song(source)

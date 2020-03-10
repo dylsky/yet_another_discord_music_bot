@@ -1,6 +1,6 @@
 import discord
 
-from ytdl_source import YTDLSource
+from AudioHelpers.AudioSources.ytdl_source import YTDLSource
 
 
 class Song:

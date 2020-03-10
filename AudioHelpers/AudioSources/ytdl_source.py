@@ -5,7 +5,7 @@ import discord
 import youtube_dl
 from discord.ext import commands
 
-from exceptions import YTDLError
+from Exceptions.exceptions import YTDLError
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
