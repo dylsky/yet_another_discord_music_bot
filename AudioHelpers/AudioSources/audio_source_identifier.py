@@ -8,9 +8,9 @@ class AudioSourceIdentifier:
 
         YOUTUBE_DOMAIN_NAMES = ["www.youtube.com", "youtu.be"]
         YANDEXMUSIC_DOMAIN_NAMES = ["music.yandex.ru"]
-        BANDCAMP_DOMAIN_NAMES = []
-        SOUNDCLOUD_DOMAIN_NAMES = []
-        SPOTIFY_DOMAIN_NAMES = []
+        BANDCAMP_DOMAIN_NAMES = ["bandcamp.com"]
+        SOUNDCLOUD_DOMAIN_NAMES = ["soundcloud.com"]
+        SPOTIFY_DOMAIN_NAMES = ["spotify.com"]
         parsed_url = urlparse(search)
 
         if any(parsed_url.netloc in s for s in YOUTUBE_DOMAIN_NAMES):
