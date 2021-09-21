@@ -23,5 +23,8 @@ bot.add_cog(MusicCogs(bot))
 async def on_ready():
     print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(bot))
 
-
-bot.run(TOKEN)
+while True:
+    try:
+        bot.run(TOKEN)
+    except Exception as e:
+        print(e)
