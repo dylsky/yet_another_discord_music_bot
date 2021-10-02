@@ -1,4 +1,5 @@
 import math
+import logging
 
 import discord
 from discord.ext import commands
@@ -72,12 +73,13 @@ class MusicCogs(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
         """Clears the queue and leaves the voice channel."""
-
-        if not ctx.voice_state.voice:
-            return await ctx.send('Not connected to any voice channel.')
-
-        await ctx.voice_state.stop()
-        del self.voice_states[ctx.guild.id]
+        try:
+            if not ctx.voice_state.voice:
+                return await ctx.send('Not connected to any voice channel.')
+            await ctx.voice_state.stop()
+            del self.voice_states[ctx.guild.id]
+        except Exception:
+            print('Exception during exit: {0}'.format(Exception))
 
     @commands.command(name='volume')
     async def _volume(self, ctx: commands.Context, *, volume: int):
