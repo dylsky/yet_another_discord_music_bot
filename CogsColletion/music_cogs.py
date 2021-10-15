@@ -76,10 +76,11 @@ class MusicCogs(commands.Cog):
         try:
             if not ctx.voice_state.voice:
                 return await ctx.send('Not connected to any voice channel.')
-            await ctx.voice_state.stop()
             del self.voice_states[ctx.guild.id]
-        except Exception:
-            print('Exception during exit: {0}'.format(Exception))
+            await ctx.message.add_reaction('👋')
+            await ctx.voice_state.stop()
+        except Exception as e:
+            print('Exception during exit: {0}'.format(e))
 
     @commands.command(name='volume')
     async def _volume(self, ctx: commands.Context, *, volume: int):
@@ -132,7 +133,7 @@ class MusicCogs(commands.Cog):
     @commands.command(name='skip')
     async def _skip(self, ctx: commands.Context):
         """Vote to skip a song. The requester can automatically skip.
-        3 skip votes are needed for the song to be skipped.
+        2 skip votes are needed for the song to be skipped.
         """
 
         if not ctx.voice_state.is_playing:
@@ -147,11 +148,11 @@ class MusicCogs(commands.Cog):
             ctx.voice_state.skip_votes.add(voter.id)
             total_votes = len(ctx.voice_state.skip_votes)
 
-            if total_votes >= 3:
+            if total_votes >= 2:
                 await ctx.message.add_reaction('⏭')
                 ctx.voice_state.skip()
             else:
-                await ctx.send('Skip vote added, currently at **{}/3**'.format(total_votes))
+                await ctx.send('Skip vote added, currently at **{}/2**'.format(total_votes))
 
         else:
             await ctx.send('You have already voted to skip this song.')
@@ -232,7 +233,7 @@ class MusicCogs(commands.Cog):
                     # TODO ?
                     source = await audio_source.create_source(ctx, search, loop=self.bot.loop)
                 else:
-                    await ctx.send('{} is not supported source.'.format(str(search)))
+                    await ctx.send('{} is not supported source.'.format(str(audio_source_type)))
             except PlayerError as e:
                 await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
             else:
