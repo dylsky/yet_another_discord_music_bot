@@ -85,11 +85,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 raise YTDLError('Could not find anything that matches `{}`'.format(search))
 
         # From here - split processing for playlists
-        if '_type' in data:
-            if data['_type'] is 'playlist':
-                raise YTDLError('Playlists currently are not supported')
-            else:
-                raise YTDLError('Unsupported data type {}'.format(data['_type']))
+        if '_type' in data and data['_type'] is 'playlist':
+            raise YTDLError('Playlists currently are not supported')
         else:
             webpage_url = process_info['webpage_url']
             partial = functools.partial(cls.ytdl.extract_info, webpage_url, download=False)
