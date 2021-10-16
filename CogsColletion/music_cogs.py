@@ -9,7 +9,6 @@ from AudioHelpers.AudioSources.audio_source_identifier import AudioSourceIdentif
 from Exceptions.exceptions import VoiceError, PlayerError
 from AudioHelpers.song import Song
 from Managers.voice_state_manager import VoiceStateManager
-from AudioHelpers.AudioSources.ytdl_source import YTDLSource, YTDLError
 
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
@@ -234,17 +233,18 @@ class MusicCogs(commands.Cog):
                 audio_source_type = AudioSourceIdentifier.identify_source(search)
                 audio_source = AudioSourceFactory.provide_source(audio_source_type)
                 if audio_source is not None:
-                    # TODO ?
-                    source = await audio_source.create_source(ctx, search, loop=self.bot.loop)
+
+                    input_queue = await audio_source.parse_into_queue(ctx, search=search)
+
+                    for item in input_queue:
+                        source = await audio_source.create_source(ctx, item, loop=self.bot.loop)
+                        song = Song(source)
+                        await ctx.voice_state.songs.put(song)
+                        await ctx.send('Enqueued {}'.format(str(source)))
                 else:
                     await ctx.send('{} is not supported source.'.format(str(audio_source_type)))
             except PlayerError as e:
                 await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
-            else:
-                song = Song(source)
-
-                await ctx.voice_state.songs.put(song)
-                await ctx.send('Enqueued {}'.format(str(source)))
 
     @_join.before_invoke
     @_play.before_invoke
