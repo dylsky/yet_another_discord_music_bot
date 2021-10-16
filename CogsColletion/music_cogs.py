@@ -12,6 +12,9 @@ from Managers.voice_state_manager import VoiceStateManager
 from AudioHelpers.AudioSources.ytdl_source import YTDLSource, YTDLError
 
 
+logging.basicConfig(filename='app.log', level=logging.INFO)
+
+
 class MusicCogs(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -39,6 +42,7 @@ class MusicCogs(commands.Cog):
         ctx.voice_state = self.get_voice_state(ctx)
 
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
+        logging.error(error)
         await ctx.send('An error occurred: {}'.format(str(error)))
 
     @commands.command(name='join', invoke_without_subcommand=True)
@@ -80,7 +84,7 @@ class MusicCogs(commands.Cog):
             await ctx.message.add_reaction('👋')
             await ctx.voice_state.stop()
         except Exception as e:
-            print('Exception during exit: {0}'.format(e))
+            logging.error('Exception during exit: {0}'.format(e))
 
     @commands.command(name='volume')
     async def _volume(self, ctx: commands.Context, *, volume: int):
