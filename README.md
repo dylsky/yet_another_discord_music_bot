@@ -1,6 +1,7 @@
-# Yet another discord music bot
+Discord Music Bot
 
-Steps for setup: 
-* pip install --upgrade youtube-dl
-* apt-get install ffmpeg / find ffmpeg.exe and add it to PATH
-* pip install -r requirements.txt
+A Python-based Discord bot for playing music in voice channels.
+
+The bot uses a modular cog-based architecture with separate audio helpers, managers, and exception handling.
+
+Stack: Python, Discord API, youtube-dl, FFmpeg
